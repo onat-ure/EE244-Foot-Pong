@@ -1,0 +1,31 @@
+NET "EppAstb" LOC= "H1";
+NET "EppDstb" LOC= "K4";
+NET "EppWait" LOC= "C2";
+NET "EppDB<0>" LOC= "E1";
+NET "EppDB<1>" LOC= "F4";
+NET "EppDB<2>" LOC= "F3";
+NET "EppDB<3>" LOC= "D2";
+NET "EppDB<4>" LOC= "D1";
+NET "EppDB<5>" LOC= "H7";
+NET "EppDB<6>" LOC= "G6";
+NET "EppDB<7>" LOC= "E4";
+NET "EppWr" LOC= "F5";
+
+NET "EppDstb" CLOCK_DEDICATED_ROUTE =FALSE;
+NET "EppAstb" CLOCK_DEDICATED_ROUTE =FALSE;
+
+
+#
+# Pin assignments for the Nexys3 Board.
+#
+net board_clk loc=V10; # 100 MHz board clock
+net vsync loc=P7; # VGA-VSYNC
+net hsync loc=N6; # VGA-HSYNC
+net red<0> loc=U7; # VGA-RED0
+net red<1> loc=V7; # VGA-RED1
+net red<2> loc=N7; # VGA-RED2
+net green<0> loc=P8; # VGA-GRN0
+net green<1> loc=T6; # VGA-GRN1
+net green<2> loc=V6; # VGA-GRN2
+net blue<0> loc=R7; # VGA-BLU1
+net blue<1> loc=T7; # VGA-BLU2

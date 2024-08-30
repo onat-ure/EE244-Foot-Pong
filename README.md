@@ -1,79 +1,47 @@
 # EE244 Final Project: FootPong
-FPGA Implementation of the iconic game Pong, with little changes made in gameplay. Build as final project for EE244 Lecture in Bogazici University in Spring 2022. Build together with my buddy Hakan Ak.
+An FPGA implementation of the iconic game Pong, with slight changes made to the gameplay. This project was built as a final project for the EE244 class at Boğaziçi University in Spring 2022, together with my buddy Hakan Ak.
 
-Here is the main diagram of the game.
+Here is the main diagram of the game:
 
 ![Main Diagram](https://github.com/arkiolok/ee244-FootPong/blob/main/main.jpg?raw=true)
 
 
 a. Pixel Generator 
 
-For constant objects, such as middle line, goals we specified 5 main constant values 
-for each object. Including, their size, their left and right points on x axis and their top 
-and bottom points on the y axis. (Generally, they are specified by underscores like 
-object_Y_T for the top point on the y axis.)
+For constant objects, such as the middle line and goals, we specified five main constant values for each object. These values include their size, their left and right points on the x-axis, and their top and bottom points on the y-axis. Generally, these points are specified using underscores, such as object_Y_T for the top point on the y-axis.
 
-For dynamic objects, such as ball and players, we specified a constant size (width 
-and length) value for them with signals for the position, left and right points on x 
-axis and top and bottom points on y axis. They also obey the same naming, but they 
-are not constant but signals since they are subject to change.
+For dynamic objects, such as the ball and players, we specified a constant size (width and length) value, along with signals for their positions, left and right points on the x-axis, and top and bottom points on the y-axis. These objects follow the same naming conventions, but their values are represented by signals rather than constants, as they are subject to change.
 
-For all objects we created on signals to print them on the screen. This signal is 
-enabled when the pixel_x and pixel_y signals coming from the VGA 
-driver is at the declared position of the objects. (Those are named 
-as object_on)
+For all objects, we created signals to display them on the screen. These signals are enabled when the pixel_x and pixel_y signals from the VGA driver are at the declared position of the objects (these signals are named as object_on).
 
-For scoreboard, we wrote two 7 segment displays for each player. 
-Their enables are dependent to signals that we for the scores.
+For the scoreboard, we used two 7-segment displays for each player. Their enables are dependent on signals that correspond to the scores.
 
-Finally, we created a process, which changes the color of the relevant pixel, if the 
-object_on is logic 1 from black to color specified.
+Finally, we created a process that changes the color of the relevant pixel from black to a specified color if the object_on signal is set to logic 1.
 
 
 b. Core 
 
-This component is where the game run. It moves the player positions, ball, counts 
-the scores and reset the game. 
+This component is where the game logic runs. It controls player positions, ball movement, scoring, and game resets.
 
-To move the players, we used the signal coming from the IO Expansion component, 
-depending on this signal, a direction vector for each player is established. If up 
-button is pressed, the direction is towards up, and if down button is pressed, the 
-direction is towards downwards. If none or both are pressed, it is just 0. 
+To move the players, we used signals from the IO Expansion component. Based on these signals, a direction vector is established for each player. If the up button is pressed, the direction is upward; if the down button is pressed, the direction is downward. If neither or both are pressed, the direction is set to 0.
 
-Depending on the vector, a process changes the position of the players with 200 Hz 
-frequency by summing the direction vector with position vector and equaling it to 
-the position vector. (The direction vectors are called playerN_dir and the position 
-vectors are called as playerN_pos. They only have one position because they are 
-only able to move in y axis.) 
+Based on the direction vector, a process updates the player's position with a 200 Hz frequency by adding the direction vector to the position vector and setting this sum as the new position. (The direction vectors are called playerN_dir and the position vectors are called playerN_pos. Each player only has a single position value since they can only move along the y-axis.)
 
-Movement of the ball is like those of players. Instead, it is not controlled by the user. 
-It also has direction and position vectors in x and y. Its direction vector is initialized 
-as moving to right&bottom at the beginning. As it colludes to players or the edges, 
-its direction vector is reversed in the relevant axis. (The direction vector is called 
-ball_dirx, ball_diry and the positions are called as ball_posx and ball_posy) If scored, 
-the ball moves towards the player who didn’t get the score. 
+The movement of the ball is similar to that of the players, except it is not user-controlled. The ball has direction and position vectors for both the x and y axes. Its direction vector is initially set to move right and downward. When the ball collides with a player or the screen edges, its direction vector is reversed along the relevant axis. (The direction vectors are named ball_dirx and ball_diry, and the positions are named ball_posx and ball_posy.) If a goal is scored, the ball moves toward the player who did not score.
 
-Scoring is done as following: If the ball enters the goal, it gains 1 point to the player 
-who scored. It is detected as if the position of ball is inside the goal with pixel_x and 
-pixel_y positions. Score is held and outputs to Pixel Generator to be displayed on the 
-screen. If any of the players reach 5 points. The points reset to 0 and game starts 
-again. 
+Scoring is determined as follows: if the ball enters a goal, the player who scored gains one point. This is detected when the ball's position overlaps with the goal's position using pixel_x and pixel_y. The score is maintained and sent to the Pixel Generator to be displayed on the screen. If either player reaches five points, the points reset to zero, and the game restarts.
+
+
 
 
 c. VGA Driver 
 
-We used the same code for what have we done in Lab 7 with a little change. Instead 
-of using a counter as RGB output, we now use pixel generator for the RGB value of 
-each pixel. 
+We used the same code as in Lab 7 with a slight modification. Instead of using a counter for the RGB output, we now use the pixel generator to determine the RGB value for each pixel.
 
-We outputted the vval and hval values that are going through front, back porchs, 
-pulse width and display time. After naming this values as pixel_x and pixel_y, we 
-used them to decide the RGB value to be printed at that point. 
+We output the vval and hval values as they pass through the front and back porches, pulse width, and display time. By naming these values pixel_x and pixel_y, we used them to determine the RGB value to be displayed at that specific point.
+
 
 
 d. IO Expansion 
 
-We followed the video uploaded on the Moodle to 
-use this module. We used the most left 4 buttons as 
-controls. In the code they are stated as Btn1(15), 
-Btn1(7), Btn1(14), Btn1(6).
+We followed the video uploaded on Moodle to use this module. The four leftmost buttons were used as controls. In the code, they are referred to as Btn1(15), Btn1(7), Btn1(14), and Btn1(6).
